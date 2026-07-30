@@ -14,7 +14,10 @@ The project is designed to test whether Devin can:
 - choose a simple, maintainable project structure;
 - implement and test a REST API;
 - document setup and usage accurately; and
-- verify its own work before delivery.
+- verify its own work before delivery;
+- delegate work across implementation, review, and verification child sessions;
+  and
+- integrate independent results into one verified delivery.
 
 ## Required technology
 
@@ -28,10 +31,13 @@ The project is designed to test whether Devin can:
 ## Instructions for the evaluator
 
 1. Give Devin access to this repository.
-2. Start in Ask Mode and ask Devin to read `AGENTS.md` and `SPEC.md`.
-3. Review its proposed implementation plan.
-4. Switch to Agent Mode and ask it to implement the specification.
-5. Assess the result using the acceptance criteria in `SPEC.md`.
+2. Attach `DEVIN_WORKFLOW.devin.md` as a Playbook when starting the session.
+3. In Ask Mode, ask Devin to read the required documents and complete the
+   Playbook's Phase 1 plan.
+4. Review and approve the Phase 1 plan.
+5. Switch to Agent Mode and ask Devin to continue the attached Playbook from
+   Phase 2.
+6. Assess the result using the acceptance criteria in `SPEC.md`.
 
 Do not add starter application code before the evaluation; creating that code
 is part of the task.
