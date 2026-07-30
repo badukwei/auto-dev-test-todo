@@ -1,57 +1,69 @@
-# Cursor Todo API Evaluation
+# Todo REST API
 
-This repository is a small, from-scratch project for evaluating Cursor Agents
-on a well-scoped software engineering task.
+Minimal Todo REST API built with FastAPI, SQLAlchemy, and SQLite.
 
-The implementation is intentionally absent. Cursor should read `AGENTS.md` and
-`SPEC.md`, propose a plan, and then build the application.
+## Prerequisites
 
-## Evaluation goal
+- Python 3.12+
 
-The project is designed to test whether Cursor can:
-
-- turn a written specification into a working application;
-- choose a simple, maintainable project structure;
-- implement and test a REST API;
-- document setup and usage accurately; and
-- verify its own work before delivery;
-- delegate work across implementation, review, and verification subagents;
-  and
-- integrate independent results into one verified delivery.
-
-## Required technology
-
-- Python 3.12
-- FastAPI
-- SQLAlchemy
-- SQLite
-- pytest
-- Ruff
-
-## Instructions for the evaluator
-
-1. Connect this repository to Cursor and open it in the Agents Window.
-2. Start an Agent session locally or in Cursor Cloud.
-3. Run `/spec-driven-delivery`.
-4. Ask Cursor to read the required documents and complete the Todo API.
-5. Review any material questions or blockers raised by the Agent.
-6. Assess the result using the acceptance criteria in `SPEC.md`.
-
-The reusable workflow is defined in
-`.cursor/commands/spec-driven-delivery.md`. Specialized implementation,
-review, and verification roles are defined under `.cursor/agents/`.
-
-Do not add starter application code before the evaluation; creating that code
-is part of the task.
-
-## Expected commands after implementation
-
-Cursor must make these commands valid and update this README if the final setup
-requires any additional steps:
+## Installation
 
 ```bash
 python -m pip install -r requirements.txt
+```
+
+## Run the API
+
+```bash
 uvicorn src.main:app --reload
+```
+
+The API listens on `http://127.0.0.1:8000`. Interactive docs are available at
+[`/docs`](http://127.0.0.1:8000/docs).
+
+Data is stored in a local SQLite file (`todos.db`) and persists across restarts.
+
+## Example requests
+
+```bash
+# Create a todo
+curl -s -X POST http://127.0.0.1:8000/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Write tests"}'
+
+# List todos
+curl -s http://127.0.0.1:8000/todos
+
+# Mark a todo complete
+curl -s -X PATCH http://127.0.0.1:8000/todos/1/complete
+
+# Delete a todo
+curl -s -o /dev/null -w "%{http_code}\n" -X DELETE http://127.0.0.1:8000/todos/1
+```
+
+## Tests and lint
+
+```bash
 pytest
 ruff check .
+```
+
+### Test layers
+
+| Layer | Location | What it covers |
+| --- | --- | --- |
+| Implementation | `tests/test_todos.py` | Endpoint happy paths and SPEC error cases via TestClient |
+| Acceptance | `tests/acceptance/` | SPEC black-box checks, boundary inputs, light response contracts |
+| E2E | `tests/e2e/` | Real `uvicorn` process, real HTTP, file SQLite lifecycle and restart |
+
+`pytest` runs all layers by default. To run only process-level e2e tests:
+
+```bash
+pytest -m e2e
+```
+
+To skip e2e (faster local loops):
+
+```bash
+pytest -m "not e2e"
 ```
